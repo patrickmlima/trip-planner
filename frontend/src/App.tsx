@@ -35,6 +35,9 @@ function App() {
     setError(null);
 
     try {
+      // Adjust capabilities based on app version
+      let capabilities = apiService.getCapabilities(appVersion);
+
       let screenData: Screen;
 
       if (currentScreen === 'dashboard') {
@@ -42,14 +45,14 @@ function App() {
           userId,
           userType,
           appVersion,
-          capabilities: apiService.getCapabilities(),
+          capabilities,
         });
       } else if (currentScreen === 'trip-details' && currentTripId) {
         screenData = await apiService.fetchTripDetails(currentTripId, {
           userId,
           userType,
           appVersion,
-          capabilities: apiService.getCapabilities(),
+          capabilities,
         });
       } else {
         throw new Error('Invalid screen configuration');
@@ -201,11 +204,16 @@ function App() {
         <div style={styles.controlGroup}>
           <label style={styles.label}>Capabilities:</label>
           <div style={styles.capabilities}>
-            {apiService.getCapabilities().map((cap) => (
+            {apiService.getCapabilities(appVersion).map((cap) => (
               <span key={cap} style={styles.capabilityBadge}>
                 {cap}
               </span>
             ))}
+            {appVersion === '1.0.0' && (
+              <span style={{ fontSize: '0.85em', color: '#666', marginLeft: '8px' }}>
+                (Limited - v1.0.0)
+              </span>
+            )}
           </div>
         </div>
 
@@ -257,7 +265,7 @@ function App() {
         <ScreenRenderer
           components={screen.components}
           onAction={handleAction}
-          supportedCapabilities={new Set(apiService.getCapabilities())}
+          supportedCapabilities={new Set(apiService.getCapabilities(appVersion))}
         />
       )}
     </div>

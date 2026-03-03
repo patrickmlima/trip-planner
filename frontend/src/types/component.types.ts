@@ -4,6 +4,57 @@
  * These match the backend component models
  */
 
+// ============================================================================
+// REUSABLE TYPE DEFINITIONS
+// ============================================================================
+
+/** Text alignment options */
+export type Alignment = 'left' | 'center' | 'right';
+
+/** Common size variants */
+export type Size = 'small' | 'medium' | 'large';
+
+/** Common style variants */
+export type StyleVariant = 'default' | 'bold' | 'light';
+
+/** Color type (hex, rgb, or named color) */
+export type Color = string;
+
+/** Spacing variants */
+export type Spacing = 'compact' | 'normal' | 'spacious';
+
+/** Layout directions */
+export type Layout = 'vertical' | 'horizontal' | 'grid';
+
+/** Border styles */
+export type BorderStyle = 'solid' | 'dashed' | 'dotted';
+
+/** Image fit options */
+export type ImageFit = 'cover' | 'contain' | 'fill';
+
+/** Loading strategy */
+export type LoadingStrategy = 'lazy' | 'eager';
+
+// ============================================================================
+// BASE INTERFACES
+// ============================================================================
+
+export interface BaseStyle {
+  align?: Alignment;
+  color?: Color;
+  backgroundColor?: Color;
+  padding?: number;
+  margin?: number;
+  borderRadius?: number;
+}
+
+export interface BaseTypography {
+  size?: Size;
+  style?: StyleVariant;
+  align?: Alignment;
+  color?: Color;
+}
+
 export interface Component {
   id: string;
   type: string;
@@ -64,7 +115,7 @@ export interface ButtonAction {
   payload: Record<string, any>;
 }
 
-export interface CardData {
+export interface CardData extends Partial<BaseStyle> {
   title?: string;
   subtitle?: string;
   description?: string;
@@ -76,30 +127,25 @@ export interface CardData {
 
 export interface CardListData {
   cards: CardData[];
-  layout?: 'vertical' | 'horizontal' | 'grid';
-  spacing?: 'compact' | 'normal' | 'spacious';
+  layout?: Layout;
+  spacing?: Spacing;
 }
 
-export interface HeaderData {
+export interface HeaderData extends BaseTypography {
   text: string;
   level?: 1 | 2 | 3;
-  align?: 'left' | 'center' | 'right';
-  style?: 'default' | 'bold' | 'light';
 }
 
-export interface TextData {
+export interface TextData extends BaseTypography {
   content: string;
-  size?: 'small' | 'medium' | 'large';
-  color?: string;
-  align?: 'left' | 'center' | 'right';
 }
 
 export interface ImageData {
   url: string;
   alt: string;
   aspectRatio?: string;
-  fit?: 'cover' | 'contain' | 'fill';
-  loading?: 'lazy' | 'eager';
+  fit?: ImageFit;
+  loading?: LoadingStrategy;
 }
 
 export interface SpacerData {
@@ -107,8 +153,8 @@ export interface SpacerData {
 }
 
 export interface DividerData {
-  style?: 'solid' | 'dashed' | 'dotted';
-  color?: string;
+  style?: BorderStyle;
+  color?: Color;
 }
 
 export interface CarouselData {

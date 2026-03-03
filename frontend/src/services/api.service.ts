@@ -138,8 +138,14 @@ export class ApiService {
   /**
    * Get current capabilities
    */
-  getCapabilities(): string[] {
-    return Array.from(this.capabilities);
+  getCapabilities(appVersion: string): string[] {
+    const capabilities = Array.from(this.capabilities);
+    if (appVersion === '1.0.0') {
+      return capabilities.filter(cap => 
+        !['carousel', 'maps', 'weather_widget', 'stat_grid'].includes(cap)
+      );
+    }
+    return capabilities;
   }
 
   /**
