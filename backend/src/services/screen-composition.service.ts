@@ -89,8 +89,10 @@ export class ScreenCompositionService {
       components.push(ComponentBuilder.spacer(12));
 
       // Check if client supports carousel
-      if (hasCapability(context, 'carousel') && 
-          featureFlagService.isEnabled('carousel_view', context.userId)) {
+      const supportsCarousel = hasCapability(context, 'carousel') && 
+                               featureFlagService.isEnabled('carousel_view', context.userId);
+      
+      if (supportsCarousel) {
         // Modern carousel view
         const carouselItems = trips.map(trip => this.createTripCard(trip, context));
         
@@ -104,6 +106,7 @@ export class ScreenCompositionService {
             showIndicators: true,
           },
           capabilities: ['carousel'],
+          // IMPORTANT: Provide fallback for clients without carousel support
           fallback: {
             id: `cardlist_fallback_${Date.now()}`,
             type: 'card_list',
@@ -115,7 +118,7 @@ export class ScreenCompositionService {
           },
         });
       } else {
-        // Traditional card list
+        // Traditional card list for older clients
         components.push({
           id: `cardlist_${Date.now()}`,
           type: 'card_list',

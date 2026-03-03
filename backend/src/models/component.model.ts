@@ -7,7 +7,83 @@
  * - Extensible through data field
  * - Versioning support
  * - Capability-based filtering
+ * - Base interfaces for common properties
  */
+
+// ============================================================================
+// REUSABLE TYPE DEFINITIONS
+// ============================================================================
+
+/** Text alignment options */
+export type Alignment = 'left' | 'center' | 'right';
+
+/** Common size variants */
+export type Size = 'small' | 'medium' | 'large';
+
+/** Common style variants */
+export type StyleVariant = 'default' | 'bold' | 'light';
+
+/** Color type (hex, rgb, or named color) */
+export type Color = string;
+
+/** Spacing variants */
+export type Spacing = 'compact' | 'normal' | 'spacious';
+
+/** Layout directions */
+export type Layout = 'vertical' | 'horizontal' | 'grid';
+
+/** Border styles */
+export type BorderStyle = 'solid' | 'dashed' | 'dotted';
+
+/** Image fit options */
+export type ImageFit = 'cover' | 'contain' | 'fill';
+
+/** Loading strategy */
+export type LoadingStrategy = 'lazy' | 'eager';
+
+// ============================================================================
+// BASE INTERFACES FOR COMPONENT DATA
+// ============================================================================
+
+/**
+ * Base style properties that many components share
+ */
+export interface BaseStyle {
+  /** Text or content alignment */
+  align?: Alignment;
+  
+  /** Color (text, background, etc.) */
+  color?: Color;
+  
+  /** Background color */
+  backgroundColor?: Color;
+  
+  /** Padding in pixels */
+  padding?: number;
+  
+  /** Margin in pixels */
+  margin?: number;
+  
+  /** Border radius in pixels */
+  borderRadius?: number;
+}
+
+/**
+ * Base typography properties
+ */
+export interface BaseTypography {
+  /** Text size */
+  size?: Size;
+  
+  /** Font weight/style */
+  style?: StyleVariant;
+  
+  /** Text alignment */
+  align?: Alignment;
+  
+  /** Text color */
+  color?: Color;
+}
 
 /**
  * Base component interface that all UI components must implement
@@ -71,29 +147,18 @@ export interface ComponentMetadata {
   tracking?: Record<string, any>;
 }
 
-export type Alignment = 'left' | 'center' | 'right';
-
-export type Style = 'default' | 'bold' | 'light';
-
-export type Size = 'small' | 'medium' | 'large';
-
 /**
  * Strongly-typed component data interfaces
+ * Now extending base interfaces for consistency
  */
 
-export interface HeaderData {
+export interface HeaderData extends BaseTypography {
   text: string;
   level?: 1 | 2 | 3; // h1, h2, h3
-  align?: 'left' | 'center' | 'right';
-  style?: 'default' | 'bold' | 'light';
 }
 
-export interface TextData {
+export interface TextData extends BaseTypography {
   content: string;
-  size?: 'small' | 'medium' | 'large';
-  color?: string;
-  align?: 'left' | 'center' | 'right';
-  style?: 'default' | 'bold' | 'light';
 }
 
 export interface ButtonData {
@@ -109,7 +174,7 @@ export interface ButtonAction {
   payload: Record<string, any>;
 }
 
-export interface CardData {
+export interface CardData extends Partial<BaseStyle> {
   title?: string;
   subtitle?: string;
   description?: string;
@@ -121,16 +186,16 @@ export interface CardData {
 
 export interface CardListData {
   cards: CardData[];
-  layout?: 'vertical' | 'horizontal' | 'grid';
-  spacing?: 'compact' | 'normal' | 'spacious';
+  layout?: Layout;
+  spacing?: Spacing;
 }
 
 export interface ImageData {
   url: string;
   alt: string;
   aspectRatio?: string;
-  fit?: 'cover' | 'contain' | 'fill';
-  loading?: 'lazy' | 'eager';
+  fit?: ImageFit;
+  loading?: LoadingStrategy;
 }
 
 export interface CarouselData {
@@ -189,8 +254,8 @@ export interface SpacerData {
 }
 
 export interface DividerData {
-  style?: 'solid' | 'dashed' | 'dotted';
-  color?: string;
+  style?: BorderStyle;
+  color?: Color;
 }
 
 /**
